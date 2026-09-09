@@ -1,0 +1,29 @@
+# ---------- Maven ----------
+target/
+*.flattened-pom.xml
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+.mvn/timing.properties
+
+# ---------- IDE ----------
+.idea/
+*.iml
+.vscode/
+*.classpath
+*.project
+.settings/
+
+# ---------- 本地/密钥（严禁入库真实凭据） ----------
+application-local.yml
+*.local.yml
+.env
+.env.*
+
+# ---------- 工具元数据 ----------
+.pi/
+
+# ---------- 日志与临时文件 ----------
+logs/
+*.log
+*.pid
