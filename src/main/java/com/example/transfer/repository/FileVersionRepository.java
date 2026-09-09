@@ -71,4 +71,17 @@ public class FileVersionRepository {
         return jdbcTemplate.query("SELECT * FROM file_version WHERE id = ?", MAPPER, id)
                 .stream().findFirst();
     }
+
+    public Optional<FileVersionRow> findLatestByFileId(long fileId) {
+        return jdbcTemplate.query(
+                "SELECT * FROM file_version WHERE file_id = ? ORDER BY version_no DESC LIMIT 1",
+                MAPPER, fileId)
+                .stream().findFirst();
+    }
+
+    public void updateMetadata(long id, long sizeBytes, OffsetDateTime mtime, String fingerprint) {
+        jdbcTemplate.update(
+                "UPDATE file_version SET size_bytes = ?, mtime = ?, fingerprint = ?, updated_at = now() WHERE id = ?",
+                sizeBytes, mtime, fingerprint, id);
+    }
 }

@@ -47,4 +47,22 @@ public class FileRepository {
         return jdbcTemplate.query("SELECT * FROM file WHERE id = ?", MAPPER, id)
                 .stream().findFirst();
     }
+
+    public Optional<FileRow> findByPath(long nasId, long directoryId, String relativePath) {
+        return jdbcTemplate.query(
+                "SELECT * FROM file WHERE nas_id = ? AND directory_id = ? AND relative_path = ?",
+                MAPPER, nasId, directoryId, relativePath)
+                .stream().findFirst();
+    }
+
+    public FileRow findOrCreate(long nasId, long directoryId, String relativePath) {
+        return findByPath(nasId, directoryId, relativePath).orElseGet(() -> {
+            try {
+                long id = insert(new FileRow(null, nasId, directoryId, relativePath, null, null));
+                return findById(id).orElseThrow();
+            } catch (org.springframework.dao.DuplicateKeyException e) {
+                return findByPath(nasId, directoryId, relativePath).orElseThrow();
+            }
+        });
+    }
 }
