@@ -68,4 +68,11 @@ public class TransferEventRepository {
         return jdbcTemplate.query("SELECT * FROM transfer_event WHERE id = ?", MAPPER, id)
                 .stream().findFirst();
     }
+
+    /** 按任务查询审计事件（按 id 升序 = 时间顺序）。 */
+    public List<TransferEventRow> findByTransferTaskId(long transferTaskId) {
+        return jdbcTemplate.query(
+                "SELECT * FROM transfer_event WHERE transfer_task_id = ? ORDER BY id",
+                MAPPER, transferTaskId);
+    }
 }
