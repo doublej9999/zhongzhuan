@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: nas-s3-gateway-transfer
+  # 未显式指定 profile 时默认使用 local；application-local.yml（gitignored）承载本地真实凭据
+  profiles:
+    default: local
+  datasource:
+    # 占位符：本地默认连 Docker 的 nas_s3_gateway；真实密码只经 ${DB_PASSWORD} 环境变量或本地文件注入
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:nas_s3_gateway}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 10000      # ms（10s）
+      validation-timeout: 5000       # ms（5s）
+      max-lifetime: 1800000          # ms（30m）
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    fail-on-missing-locations: false
+
+app:
+  instance-id: ${INSTANCE_ID:nas-s3-gateway-01}
+  worker-id-prefix: ${WORKER_ID_PREFIX:worker}
+  time-zone: ${APP_TIME_ZONE:Asia/Shanghai}
+
+logging:
+  level:
+    root: INFO
+    com.example.transfer: INFO
